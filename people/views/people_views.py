@@ -4,7 +4,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 
-from ..models import Pessoa, Endereco, Setor
+from ..models import Pessoa, Endereco, Setor, Cargo
 
 @require_http_methods(["GET","POST"])
 def home(request):
@@ -61,3 +61,28 @@ def excluir_setor(request, id_setor):
 		return HttpResponse(f"Excluiu {setor.descricao} (id={setor.id})")
 	except ObjectDoesNotExist:
 		return HttpResponse("Setor não encontrado")
+
+def cadastrar_cargo(request):
+	c = Cargo(descricao="Programador", cbo=123456)
+	c.save()
+	return HttpResponse(f"{c.descricao} cadastrado com sucesso (id={c.id})")
+
+def listar_cargo(request):
+	lista = Cargo.objects.all()
+	html = "<ul>"
+	for c in lista:
+		html+=f"<li>{c.descricao} (id={c.id})</li>"
+	html+= "</ul>"
+	return HttpResponse(html)
+
+def detalhar_cargo(request, id_cargo):
+	cargo = Cargo.objects.get(id=id_cargo)
+	return HttpResponse(f"Detalhou {cargo.descricao} (id={cargo.id})")
+
+def excluir_cargo(request, id_cargo):
+	try:
+		cargo = Cargo.objects.get(id=id_cargo)
+		cargo.delete()		
+		return HttpResponse(f"Excluiu {cargo.descricao} (id={cargo.id})")
+	except ObjectDoesNotExist:
+		return HttpResponse("Cargo não encontrado")

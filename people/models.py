@@ -15,3 +15,7 @@ class Endereco(models.Model):
 
 class Setor(models.Model):
 	descricao = models.CharField(max_length=100)
+
+class Cargo(models.Model):
+	descricao = models.CharField(max_length=100)
+	cbo = models.IntegerField(default=0)
